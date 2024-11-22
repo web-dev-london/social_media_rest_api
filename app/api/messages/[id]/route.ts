@@ -1,27 +1,26 @@
-import { NextRequest, NextResponse } from "next/server";
-import { updateMessageSchema } from "@/schema/zod";
 import prisma from "@/prisma/client-orm";
-import { ZodError } from "zod";
-
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
-  const { id } = params;
-
-  const message = await prisma.message.findUnique({
-    where: {
-      id,
-    },
-  });
-
-  if (!message) {
-    return NextResponse.json({ error: "Message not found" }, { status: 404 });
-  }
-
-  return NextResponse.json(message, { status: 200 });
-};
+import { updateMessageSchema } from "@/schema/zod";
+import { handleSingleRequest } from "@/utils/handleSingleRequest";
+import { NextRequest, NextResponse } from "next/server";
 
 
-export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
-  const { id } = params;
+export async function GET(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+): Promise<NextResponse> {
+  const response = await handleSingleRequest(
+    request,
+    { params },
+    async (id) => await prisma.message.findUnique({ where: { id } })
+  );
+  return response;
+}
+
+
+export async function PUT(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+): Promise<NextResponse> {
   const body = await request.json();
   const parsedBody = updateMessageSchema.safeParse(body);
 
@@ -29,25 +28,27 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
     return NextResponse.json(parsedBody.error.format(), { status: 400 });
   }
 
-  try {
-    const message = await prisma.message.update({
-      where: {
-        id,
-      },
-      data: parsedBody.data,
-    });
-
-    return NextResponse.json(message, { status: 200 });
-  } catch (error) {
-    if (error instanceof ZodError) {
-      return NextResponse.json(error, { status: 400 });
+  const response = await handleSingleRequest(
+    request,
+    { params },
+    async (id) => {
+      const message = await prisma.message.update({
+        where: {
+          id,
+        },
+        data: parsedBody.data,
+      });
+      return { text: "Message updated successfully", message }
     }
-    return NextResponse.json(error, { status: 500 });
-  }
+  )
+
+  return response
 };
 
-export async function PATCH(request: NextRequest, { params }: { params: { id: string } }) {
-  const { id } = params;
+export async function PATCH(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+): Promise<NextResponse> {
   const body = await request.json();
   const parsedBody = updateMessageSchema.safeParse(body);
 
@@ -55,35 +56,36 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
     return NextResponse.json(parsedBody.error.format(), { status: 400 });
   }
 
-  try {
-    const message = await prisma.message.update({
-      where: {
-        id,
-      },
-      data: parsedBody.data,
-    });
-
-    return NextResponse.json(message, { status: 200 });
-  } catch (error) {
-    if (error instanceof ZodError) {
-      return NextResponse.json(error, { status: 400 });
+  const response = await handleSingleRequest(
+    request,
+    { params },
+    async (id) => {
+      const message = await prisma.message.update({
+        where: {
+          id,
+        },
+        data: parsedBody.data,
+      });
+      return { text: "Message updated successfully", message }
     }
-    return NextResponse.json(error, { status: 500 });
-  }
+  )
+
+  return response
 };
 
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
-  const { id } = params;
 
-  try {
-    const message = await prisma.message.delete({
-      where: {
-        id,
-      },
-    });
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+): Promise<NextResponse> {
+  const response = await handleSingleRequest(
+    request,
+    { params },
+    async (id) => {
+      const message = await prisma.message.delete({ where: { id } });
+      return { text: "Message deleted successfully", message }
+    }
+  )
 
-    return NextResponse.json(message, { status: 200 });
-  } catch (error) {
-    return NextResponse.json(error, { status: 500 });
-  }
+  return response;
 };

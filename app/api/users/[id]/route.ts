@@ -1,10 +1,26 @@
-import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/prisma/client-orm";
 import { updateUserSchema } from "@/schema/zod";
-import { ZodError } from "zod";
+import { handleSingleRequest } from "@/utils/handleSingleRequest";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
-  const { id } = params;
+
+export async function GET(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+): Promise<NextResponse> {
+  const response = await handleSingleRequest(
+    request,
+    { params },
+    async (id) => await prisma.message.findUnique({ where: { id } })
+  );
+  return response;
+}
+
+
+export async function PUT(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+): Promise<NextResponse> {
   const body = await request.json();
   const parsedBody = updateUserSchema.safeParse(body);
 
@@ -12,25 +28,27 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
     return NextResponse.json(parsedBody.error.format(), { status: 400 });
   }
 
-  try {
-    const user = await prisma.user.update({
-      where: {
-        id,
-      },
-      data: parsedBody.data,
-    });
-
-    return NextResponse.json(user, { status: 200 });
-  } catch (error) {
-    if (error instanceof ZodError) {
-      return NextResponse.json(error, { status: 400 });
+  const response = await handleSingleRequest(
+    request,
+    { params },
+    async (id) => {
+      const user = await prisma.user.update({
+        where: {
+          id,
+        },
+        data: parsedBody.data,
+      });
+      return { text: "User updated successfully", user }
     }
-    return NextResponse.json(error, { status: 500 });
-  }
+  )
+
+  return response
 };
 
-export async function PATCH(request: NextRequest, { params }: { params: { id: string } }) {
-  const { id } = params;
+export async function PATCH(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+): Promise<NextResponse> {
   const body = await request.json();
   const parsedBody = updateUserSchema.safeParse(body);
 
@@ -38,36 +56,36 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
     return NextResponse.json(parsedBody.error.format(), { status: 400 });
   }
 
-  try {
-    const user = await prisma.user.update({
-      where: {
-        id,
-      },
-      data: parsedBody.data,
-    });
-
-    return NextResponse.json(user, { status: 200 });
-  } catch (error) {
-    if (error instanceof ZodError) {
-      return NextResponse.json(error, { status: 400 });
+  const response = await handleSingleRequest(
+    request,
+    { params },
+    async (id) => {
+      const user = await prisma.user.update({
+        where: {
+          id,
+        },
+        data: parsedBody.data,
+      });
+      return { text: "User updated successfully", user }
     }
-    return NextResponse.json(error, { status: 500 });
-  }
+  )
+
+  return response
 };
 
 
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
-  const { id } = params;
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+): Promise<NextResponse> {
+  const response = await handleSingleRequest(
+    request,
+    { params },
+    async (id) => {
+      const user = await prisma.user.delete({ where: { id } });
+      return { text: "User deleted successfully", user }
+    }
+  )
 
-  try {
-    const user = await prisma.user.delete({
-      where: {
-        id,
-      },
-    });
-
-    return NextResponse.json(user, { status: 200 });
-  } catch (error) {
-    return NextResponse.json(error, { status: 500 });
-  }
+  return response;
 }
