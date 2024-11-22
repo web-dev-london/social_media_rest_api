@@ -13,6 +13,21 @@ export async function POST(request: NextRequest) {
 
   const { senderId, receiverId, content } = parsedBody.data;
 
+  // Validate sender and receiver exist
+  const sender = await prisma.user.findUnique({ where: { id: senderId } });
+  const receiver = await prisma.user.findUnique({ where: { id: receiverId } });
+
+  console.log('Sender:', sender);  // Log sender data
+  console.log('Receiver:', receiver);  // Log receiver data
+
+  if (!sender || !receiver) {
+    return NextResponse.json(
+      { error: "Invalid senderId or receiverId" },
+      { status: 400 }
+    );
+  }
+
+
   try {
     const message = await prisma.message.create({
       data: {

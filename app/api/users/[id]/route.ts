@@ -8,12 +8,18 @@ export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ): Promise<NextResponse> {
+  // const { id } = await params;
+
+  // const user = await prisma.user.findUnique({ where: { id } });
+  // return NextResponse.json({ success: true, user }, { status: 200 });
+
   const response = await handleSingleRequest(
     request,
     { params },
-    async (id) => await prisma.message.findUnique({ where: { id } })
+    async (id) => await prisma.user.findUnique({ where: { id } })
   );
-  return response;
+
+  return response
 }
 
 

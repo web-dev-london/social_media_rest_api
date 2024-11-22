@@ -6,7 +6,7 @@ type FetchItemCallback<T> = (id: string) => Promise<T | null>;
 export async function handleSingleRequest<T>(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> },
-  fetchItemCallback: FetchItemCallback<T>
+  fetchItemCallback: FetchItemCallback<T> = async () => null
 ): Promise<NextResponse> {
   try {
     const { id } = await params;
@@ -24,3 +24,4 @@ export async function handleSingleRequest<T>(
     return handleErrors(error);
   }
 }
+

@@ -3,7 +3,9 @@ const users = [
   { "id": "cuid12346", "username": "janedoe", "email": "janedoe@example.com", "bio": "Enjoys hiking and coffee." },
   { "id": "cuid12347", "username": "alice", "email": "alice@example.com", "bio": "Aspiring photographer." },
   { "id": "cuid12348", "username": "bob", "email": "bob@example.com", "bio": "Avid gamer and music enthusiast." },
-  { "id": "cuid12349", "username": "charlie", "email": "charlie@example.com", "bio": "Tech blogger and DIY fan." }
+  { "id": "cuid12349", "username": "charlie", "email": "charlie@example.com", "bio": "Tech blogger and DIY fan." },
+  { "id": "cuid12350", "username": "dave", "email": "dave@example.com", "bio": "Passionate about travel and culture." },
+  { "id": "cuid12351", "username": "eve", "email": "eve@example.com", "bio": "Tech enthusiast and music lover." }
 ];
 
 const friendships = [

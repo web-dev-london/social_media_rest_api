@@ -3,6 +3,7 @@ import { createFriendshipSchema } from "@/schema/zod";
 import prisma from "@/prisma/client-orm";
 import { ZodError } from "zod";
 
+
 export async function POST(request: NextRequest) {
   const body = await request.json();
   const parsedBody = createFriendshipSchema.safeParse(body);
@@ -30,6 +31,8 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(error, { status: 500 });
   }
 }
+
+
 
 export async function GET(request: NextRequest) {
   const { senderId, receiverId, search, status, sort, order = 'asc', page = '1', limit = '10' } = Object.fromEntries(
@@ -63,9 +66,10 @@ export async function GET(request: NextRequest) {
     filters.status = status;
   }
 
-  if (!senderId || !receiverId) {
+  if (!senderId?.trim() || !receiverId?.trim()) {
     return NextResponse.json({ error: "Missing senderId or receiverId" }, { status: 400 });
   }
+
 
 
   const orderBy: Record<string, 'asc' | 'desc'> = {};
