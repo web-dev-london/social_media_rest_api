@@ -13,6 +13,7 @@ export async function GET(
     { params },
     async (id) => await prisma.message.findUnique({ where: { id } })
   );
+
   return response;
 }
 
