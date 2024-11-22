@@ -9,6 +9,54 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
+}
+
+enum FriendshipStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+}
+
+model User {
+  id       String  @id @default(cuid())
+  username String  @unique
+  email    String  @unique
+  bio      String?
+  image    String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  messagesSent           Message[]    @relation("SentMessages")
+  messagesReceived       Message[]    @relation("ReceivedMessages")
+  friendshipsAsRequester Friendship[] @relation("RequesterFriendships")
+  friendshipsAsAddressee Friendship[] @relation("AddresseeFriendships")
+}
+
+model Message {
+  id         String @id @default(cuid())
+  content    String
+  senderId   String
+  receiverId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  sender   User @relation("SentMessages", fields: [senderId], references: [id])
+  receiver User @relation("ReceivedMessages", fields: [receiverId], references: [id])
+}
+
+model Friendship {
+  id          String           @id @default(cuid())
+  requesterId String
+  addresseeId String
+  status      FriendshipStatus @default(PENDING)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  requester User @relation("RequesterFriendships", fields: [requesterId], references: [id])
+  addressee User @relation("AddresseeFriendships", fields: [addresseeId], references: [id])
 }
