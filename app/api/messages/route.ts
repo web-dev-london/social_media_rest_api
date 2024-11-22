@@ -65,9 +65,6 @@ export async function GET(request: NextRequest) {
     filters.receiverId = receiverId;
   }
 
-  if (!senderId || !receiverId) {
-    return NextResponse.json({ error: "Missing senderId or receiverId" }, { status: 400 });
-  }
 
   const sortOrder: { [key: string]: 'asc' | 'desc' } = sort ? { [sort]: order as 'asc' | 'desc' } : { createdAt: order as 'asc' | 'desc' };
 
