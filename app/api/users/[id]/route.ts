@@ -90,12 +90,3 @@ export async function DELETE(
 
   return response;
 }
-
-
-
-/* 
-  // const { id } = await params;
-
-  // const user = await prisma.user.findUnique({ where: { id } });
-  // return NextResponse.json({ success: true, user }, { status: 200 });
- */
