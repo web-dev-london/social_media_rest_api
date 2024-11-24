@@ -2,7 +2,7 @@
 
 A Social Media or Messaging API allows users to send messages and interact with each other, create profiles, add friends or followers, and more. This is essential for building a social media platform or a messaging service or any other application that requires real-time communication between users.
 
-1. Users API
+### Users API
 
 The Users API allows users to create profiles, follow other users, and view their profiles. It also provides endpoints for updating profiles, getting user details, and searching for users.
 
@@ -15,7 +15,7 @@ The Users API allows users to create profiles, follow other users, and view thei
 -   `/users/[id]` (PATCH): Partially updates the profile of a specific user.
 -   `/users/[id]` (DELETE): Deletes a specific user.
 
-## Query Parameters
+### Query Parameters
 
 Query parameters are used to pass parameters to the API endpoint. They are used to filter the results or to specify the page number or page size.
 
@@ -31,7 +31,7 @@ Query parameters are used to pass parameters to the API endpoint. They are used 
 
 -   Fetches page 1 of 10 users sorted by name in ascending order and filtered by "John" in the name field.
 
-2. Messages API
+### Messages API
 
 The Messages API allows users to send and receive messages. It also provides endpoints for getting messages, sending messages, and deleting messages.
 
@@ -44,7 +44,7 @@ The Messages API allows users to send and receive messages. It also provides end
 -   `/messages/[id]` (PATCH): Partially updates a specific message.
 -   `/messages/[id]` (DELETE): Deletes a specific message.
 
-## Query Parameters
+### Query Parameters
 
 Query parameters are used to pass parameters to the API endpoint. They are used to filter the results or to specify the page number or page size.
 
@@ -85,7 +85,7 @@ The response is a JSON object with the following properties:
 }
 ```
 
-3. Friendships API
+### Friendships API
 
 The Friendships API allows users to create friendships, accept friendships, and delete friendships. It also provides endpoints for getting friendships, accepting friendships, and deleting friendships.
 
@@ -98,7 +98,7 @@ The Friendships API allows users to create friendships, accept friendships, and 
 -   `/friend-requests/[id]` (PATCH): Partially update a specific friend/follow request.
 -   `/friend-requests/[id]` (DELETE): Delete a specific friend/follow request.
 
-## Query Parameters
+### Query Parameters
 
 Query parameters are used to pass parameters to the API endpoint. They are used to filter the results or to specify the page number or page size.
 
